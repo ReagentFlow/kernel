@@ -1,6 +1,6 @@
 import serial
 import struct
-import src.constants as cnst
+from src.constants import SCALES_PORT
 
 
 def decode_scale_data(hex_string):
@@ -15,7 +15,7 @@ def decode_scale_data(hex_string):
 
 
 def getting_weight():
-    ser = serial.Serial(cnst.SCALES_PORT, 9600, timeout=1)
+    ser = serial.Serial(SCALES_PORT, 9600, timeout=1)
     s = ser.readline()
     while s == b'':
         s = ser.readline()
