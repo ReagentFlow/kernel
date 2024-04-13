@@ -1,9 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
-from model import Container
+from src.models import Container
 
 
-class FireDataBase():
+class FireDataBase:
     def __init__(self, file: str):
         self.cred = credentials.Certificate(f'{file}')
         self.app = firebase_admin.initialize_app(self.cred)
@@ -25,6 +25,10 @@ class FireDataBase():
             return doc.to_dict()
             #print(doc.id, doc.get('name'), doc.to_dict())
         return None
+
+    def list(self, collection: str):
+        doc_ref = self.db.collection(f'{collection}')
+        return doc_ref.get()
 
     def delete(self):
         pass
