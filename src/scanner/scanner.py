@@ -1,7 +1,7 @@
 import cv2
 import time
 from pyzbar.pyzbar import decode
-from .. import constants as cnst
+import src.constants as cnst
 
 
 def barcode_scanner():

@@ -1,6 +1,6 @@
 import serial
 import struct
-from .. import constants as cnst
+import src.constants as cnst
 
 
 def decode_scale_data(hex_string):
