@@ -1,10 +1,11 @@
 import cv2
 import time
 from pyzbar.pyzbar import decode
+from .. import constants as cnst
 
 
 def barcode_scanner():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(cnst.VIDEO_PORT)
     cap.set(3, 640)
     cap.set(4, 680)
 

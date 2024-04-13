@@ -4,14 +4,13 @@ from fire_db.fire_db import FireDataBase
 import uuid
 from firebase_admin import credentials, firestore
 
-
 from model import StatusExperation, Container, ContainerData
 
 COLLECTION = 'containers'
 
 if __name__ == "__main__":
     fire_db = FireDataBase("private.json")
-    while(True):
+    while (True):
         key = barcode_scanner()
         print(key)
         if key:
