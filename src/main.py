@@ -5,11 +5,10 @@ import uuid
 from firebase_admin import credentials, firestore
 
 from model import StatusExperation, Container, ContainerData
-
-COLLECTION = 'containers'
+from src.constants import KEY, COLLECTION
 
 if __name__ == "__main__":
-    fire_db = FireDataBase("private.json")
+    fire_db = FireDataBase(KEY)
     while (True):
         key = barcode_scanner()
         print(key)
@@ -17,10 +16,7 @@ if __name__ == "__main__":
             weight = getting_weight()
             data = ContainerData(name=str(key), weight=weight, barcode_id=key, container_id=0, density=0)
             containter = Container(key=key, data=data)
-            print(1)
-
             doc = fire_db.get(str(key), COLLECTION)
-            print(2)
             if doc:
                 fire_db.update(COLLECTION, containter)
             else:
