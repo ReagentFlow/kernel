@@ -1,1 +1,1 @@
-import fire_db
+from .fire_db import *

@@ -1,1 +1,1 @@
-from scanner import barcode_scanner
+from .scanner import barcode_scanner

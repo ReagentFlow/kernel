@@ -5,7 +5,7 @@ from src.models import Container
 
 class FireDataBase:
     def __init__(self, file: str):
-        self.cred = credentials.Certificate(f'{file}')
+        self.cred = credentials.Certificate(file)
         self.app = firebase_admin.initialize_app(self.cred)
         self.db = firestore.client()
 

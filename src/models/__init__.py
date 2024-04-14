@@ -1,1 +1,1 @@
-from src.models.model import Container, ContainerData, StatusExperation
+from .model import Container, ContainerData, StatusExperation

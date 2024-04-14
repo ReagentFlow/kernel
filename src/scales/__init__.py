@@ -1,1 +1,1 @@
-from scales_main import getting_weight
+from .scales_main import getting_weight
