@@ -1,3 +1,4 @@
 private.json
 .DS_Store
 .idea
+venv/
