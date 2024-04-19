@@ -1,6 +1,7 @@
 import cv2
 import time
 from pyzbar.pyzbar import decode
+
 from src.constants import VIDEO_PORT, MAX_SCANNING_TIME
 
 

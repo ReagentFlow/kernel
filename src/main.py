@@ -1,31 +1,26 @@
-from scanner.scanner import barcode_scanner
-from scales.scales_main import getting_weight
-from fire_db.fire_db import FireDataBase
-import uuid
-from firebase_admin import credentials, firestore
-
-from model import StatusExperation, Container, ContainerData
-from src.constants import KEY, COLLECTION
+from scanner import barcode_scanner
+from scales import getting_weight
+from fire_db import FireDataBase
+from models import Container, ContainerData
+from constants import KEY, COLLECTION
 
 if __name__ == "__main__":
-    fire_db = FireDataBase(KEY)
-    while (True):
+    database = FireDataBase(KEY)
+    while True:
         key = barcode_scanner()
-        print(key)
         if key:
             weight = getting_weight()
             data = ContainerData(name=str(key), weight=weight, barcode_id=key, container_id=0, density=0)
             containter = Container(key=key, data=data)
-            doc = fire_db.get(str(key), COLLECTION)
+            doc = database.get(str(key), COLLECTION)
             if doc:
-                fire_db.update(COLLECTION, containter)
+                database.update(COLLECTION, containter)
+                print('update')
             else:
-                '''
-                docs = fire_db.get(collection=COLLECTION)
-                len_of_db = len(docs)+1
-                data = ContainerData(name=str(key), weight=weight, barcode_id=key, container_id=len_of_db, density=0)
+                containter_id = len(database.list(collection=COLLECTION))+1
+                data = ContainerData(name=str(key), weight=weight, barcode_id=key, container_id=containter_id, density=0)
                 containter = Container(key=key, data=data)
-                '''
-                fire_db.create(COLLECTION, containter)
+                database.create(COLLECTION, containter)
+                print('create')
         else:
             raise Exception("Error with scanning bar code")
