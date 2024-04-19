@@ -1,4 +1,4 @@
-SCALES_PORT = 'COM3'
+SCALES_PORT = '/dev/ttyACM0'
 VIDEO_PORT = 0
 KEY = 'private.json'
 COLLECTION = 'containers'
