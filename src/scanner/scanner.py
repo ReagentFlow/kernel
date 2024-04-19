@@ -1,7 +1,8 @@
 import cv2
 import time
 from pyzbar.pyzbar import decode
-from src.constants import VIDEO_PORT
+
+from src.constants import VIDEO_PORT, MAX_SCANNING_TIME
 
 
 def barcode_scanner():
@@ -21,8 +22,8 @@ def barcode_scanner():
             result = code.data.decode('utf-8')
             code_detected = True
 
-            if time.time() - start_time > 30000000:
-                print("Function has been running for more than 30 seconds without a result.")
+            if time.time() - start_time > MAX_SCANNING_TIME:
+                print(f'Function has been running for more than {MAX_SCANNING_TIME} seconds without a result.')
                 break
 
         cv2.imshow(window_name, frame)
@@ -30,8 +31,8 @@ def barcode_scanner():
         if code_detected == True:
             break
 
-        if time.time() - start_time > 30:
-            print("Function has been running for more than 30 seconds without a result.")
+        if time.time() - start_time > MAX_SCANNING_TIME:
+            print(f'Function has been running for more than {MAX_SCANNING_TIME} seconds without a result.')
             break
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -41,3 +42,7 @@ def barcode_scanner():
 
     cv2.destroyWindow(window_name)
     return result
+
+
+if __name__ == '__main__':
+    print(barcode_scanner())

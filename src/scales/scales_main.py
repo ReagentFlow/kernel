@@ -33,3 +33,7 @@ def getting_weight():
     print(f"Decoded Value: {value_1} grams")
     ser.close()
     return value_1
+
+
+if __name__ == '__main__':
+    print(getting_weight())

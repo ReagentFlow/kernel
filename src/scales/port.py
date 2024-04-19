@@ -1,10 +1,10 @@
-'''
 import sys
 import glob
 import serial
+import serial.tools.list_ports
 
 
-def serial_ports():
+def serial_ports_1():
     """ Lists serial port names
 
         :raises EnvironmentError:
@@ -33,14 +33,13 @@ def serial_ports():
     return result
 
 
+def serial_ports_2():
+    ports = []
+    for port in serial.tools.list_ports.comports():
+        ports.append(port.name)
+    return ports
+
+
 if __name__ == '__main__':
-    print(serial_ports())
-
-
-'''
-import serial.tools.list_ports
-
-ports = []
-for port in serial.tools.list_ports.comports():
-    ports.append(port.name)
-print(ports)
+    print(serial_ports_1())
+    print(serial_ports_2())
