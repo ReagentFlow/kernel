@@ -33,4 +33,4 @@ if __name__ == "__main__":
                 _creating()
                 print('create')
         else:
-            raise Exception("Error with scanning bar code")
+            print("Видимо вы считали QR код, а не штрих код!")
