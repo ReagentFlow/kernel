@@ -15,7 +15,7 @@ class FireDataBase:
 
     def update(self, collection: str, container: Container):
         doc_ref = self.db.collection(f"{collection}").document(f"{container[0]}")
-        data = container[1].model_dump(exclude={'name','container_id',}) # need to include date field
+        data = container[1].model_dump(exclude={'name', 'container_id', 'date'})
         doc_ref.update(data)
 
     def get(self, id: str, collection: str = "/"):
