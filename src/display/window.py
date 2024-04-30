@@ -22,6 +22,9 @@ class MainWindow(QMainWindow):
         self.barcode_label.setText(f"Barcode: {barcode}")
         self.weight_label.setText(f"Weight: {weight}")
 
+    def show(self):
+        super(MainWindow, self).showFullScreen()
+
 
 if __name__ == "__main__":
     app = QApplication([])
