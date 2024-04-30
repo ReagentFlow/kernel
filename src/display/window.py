@@ -1,18 +1,48 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QFrame, QHBoxLayout
+from src.scanner import barcode_scanner
+from src.scales import getting_weight
 
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        self.setWindowTitle("Barcode and Weight Information")
+        self.setWindowTitle("ReagentFlow system barcode and weight info")
+
+        font = QFont()
+        font.setPointSize(30)
 
         self.barcode_label = QLabel()
+        self.barcode_label.setFont(font)
         self.weight_label = QLabel()
+        self.weight_label.setFont(font)
+
+        self.scan_button = QPushButton("Scan Barcode")
+        self.scan_button.setFont(font)
+        self.scan_button.clicked.connect(barcode_scanner)
+        self.weight_button = QPushButton("Get Weight")
+        self.weight_button.setFont(font)
+        self.weight_button.clicked.connect(getting_weight)
+
+        barcode_frame = QFrame()
+        barcode_frame.setStyleSheet("background-color: grey;")
+        barcode_layout = QHBoxLayout(barcode_frame)
+        barcode_layout.addWidget(self.barcode_label)
+        barcode_layout.setAlignment(Qt.AlignCenter)
+
+        weight_frame = QFrame()
+        weight_frame.setStyleSheet("background-color: grey;")
+        weight_layout = QHBoxLayout(weight_frame)
+        weight_layout.addWidget(self.weight_label)
+        weight_layout.setAlignment(Qt.AlignCenter)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.barcode_label)
-        layout.addWidget(self.weight_label)
+        layout.addWidget(barcode_frame)
+        layout.addWidget(weight_frame)
+        layout.addWidget(self.scan_button)
+        layout.addWidget(self.weight_button)
 
         container = QWidget()
         container.setLayout(layout)
