@@ -1,6 +1,6 @@
 # kernel
 
-# Project Structure
+## Project Structure
 
 | File/Directory               | Description                           |
 |------------------------------|---------------------------------------|
