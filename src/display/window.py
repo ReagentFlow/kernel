@@ -1,8 +1,9 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QFrame, QHBoxLayout
 from src.scanner import barcode_scanner
 from src.scales import getting_weight
+import time
 
 
 class MainWindow(QMainWindow):
@@ -60,5 +61,21 @@ if __name__ == "__main__":
     app = QApplication([])
     window = MainWindow()
     window.show()
-    window.update_info(barcode=1234477777777, weight=1235)
+
+    window.update_info(barcode=777, weight=0)
+    app.processEvents()
+
+    time.sleep(2)
+    window.update_info(barcode=777777, weight=12)
+    app.processEvents()
+
+    time.sleep(2)
+    window.update_info(barcode=111111, weight=1232323)
+    app.processEvents()
+
+    time.sleep(2)
+    window.update_info(barcode=9090090, weight=100)
+    app.processEvents()
+
+    QTimer.singleShot(3000, app.quit)
     app.exec_()

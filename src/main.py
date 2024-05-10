@@ -6,6 +6,7 @@ from fire_db import FireDataBase
 from models import Container, ContainerData
 from constants import KEY, COLLECTION
 from button import Button, PinOUT, PinIN
+from display import MainWindow, QApplication, QTimer
 
 
 def _updating(key: int, weight: int) -> None:
@@ -24,9 +25,19 @@ def _creating(key: int, weight: int) -> None:
 
 
 def main() -> None:
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+
     key = barcode_scanner()
+    window.update_info(barcode=key, weight=0)
+    app.processEvents()
+
     if key:
         weight = getting_weight()
+        window.update_info(barcode=key, weight=weight)
+        app.processEvents()
+
         if database.get(str(key), COLLECTION):
             _updating(key, weight)
             print('update')
@@ -35,6 +46,9 @@ def main() -> None:
             print('create')
     else:
         print("Видимо вы считали QR код, а не штрих код!")
+
+    QTimer.singleShot(3000, app.quit)
+    app.exec_()
 
 
 if __name__ == "__main__":
