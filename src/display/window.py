@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-    def update_info(self, barcode: int, weight: int) -> None:
+    def update_info(self, barcode=None, weight=None) -> None:
         self.barcode_label.setText(f"Barcode: {barcode}")
         self.weight_label.setText(f"Weight: {weight}")
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
 
-    window.update_info(barcode=777, weight=0)
+    window.update_info(barcode=777)
     app.processEvents()
 
     time.sleep(2)

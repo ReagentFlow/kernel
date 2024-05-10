@@ -30,7 +30,7 @@ def main() -> None:
     window.show()
 
     key = barcode_scanner()
-    window.update_info(barcode=key, weight=0)
+    window.update_info(barcode=key)
     app.processEvents()
 
     if key:
