@@ -12,9 +12,10 @@ class Button:
         GPIO.setwarnings(False)
         GPIO.setup(self.pin_in, GPIO.IN)
         GPIO.setup(self.pin_out, GPIO.OUT)
+        GPIO.output(self.pin_out, GPIO.HIGH)
 
     def is_pressed(self) -> bool:
-        return GPIO.input(self.pin_in) == 0
+        return GPIO.input(self.pin_in) == GPIO.HIGH
 
     @staticmethod
     def cleanup() -> None:
