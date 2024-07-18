@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import NamedTuple
 from pydantic import BaseModel
 from enum import Enum
 
 
-class StatusExperation(Enum):
+class StatusExpiration(Enum):
     FEW = 'RED'
     ORDER = 'YELLOW'
     MANY = 'GREEN'
@@ -12,15 +13,10 @@ class StatusExperation(Enum):
 class ContainerData(BaseModel):
     barcode_id: int
     container_id: int
-    density:int
+    density: int
     name: str
     weight: int
-    '''
-    value: int
-    status: StatusExperation
-    '''
-    # class Config:
-    #     json_encoders = {StatusExperation: lambda v: v.name}
+    date: datetime
 
 
 class Container(NamedTuple):
