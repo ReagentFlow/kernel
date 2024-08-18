@@ -7,6 +7,7 @@ from models import Container, ContainerData
 from constants import KEY, COLLECTION
 from button import Button, PinOUT, PinIN
 from display import MainWindow
+from display.display_melton import Display
 
 
 def _updating(key: int, weight: int) -> None:
