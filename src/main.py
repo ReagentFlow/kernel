@@ -30,7 +30,7 @@ def scanner_check():
 def scales_check():
     global is_scale
     weight = getting_weight()
-    if weight:
+    if weight > 0:
         is_scale = True
         return weight
     else:
@@ -46,11 +46,12 @@ def main():
         key = scanner_check()
         print("отсканируйте еще раз")
     print(key)
+
     print("положите на весы")
 
     weight = ""
     while not is_scale:
-        scales_check()
+        weight = scales_check()
         print("положите еще раз на весы")
     print(weight)
     print("данные занесены в базу")
@@ -67,7 +68,6 @@ if __name__ == "__main__":
     # pin_in = PinIN(40)
     # pin_out = PinOUT(38)
     # button = Button(pin_in, pin_out)
-
     display = Display()
     display.clear()
 
