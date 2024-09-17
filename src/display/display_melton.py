@@ -3,10 +3,10 @@ from RPLCD.gpio import CharLCD
 
 
 class Display:
-    def __init__(self):
-        rs_pin = 26
-        e_pin = 19
-        data_pins = [13, 6, 5, 11]
+    def __init__(self, rs_pin, e_pin, data_pins, cols=16, rows=2):
+        # Настройка GPIO
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
 
         # Настройка дисплея
         self.lcd = CharLCD(pin_rs=rs_pin, pin_rw=None, pin_e=e_pin, pins_data=data_pins,
@@ -25,6 +25,10 @@ class Display:
 
 
 if __name__ == '__main__':
-    display = Display()
-    display.clear()
+    rs_pin = 26
+    e_pin = 19
+    data_pins = [13, 6, 5, 11]
+
+    display = Display(rs_pin=rs_pin, e_pin=e_pin, data_pins=data_pins)
+
     display.display_message("start")
