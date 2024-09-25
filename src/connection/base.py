@@ -1,12 +1,13 @@
 import requests
 
 class APIConnection:
-    def __init__(self, API_url):
+    def __init__(self, API_url, device_token):
         self.url = API_url
+        self.headers = {'Device-Token': device_token}
 
     def get_item(self, item_id):
         try:
-            response = requests.get(f"{self.url}/item/{item_id}")
+            response = requests.get(f"{self.url}/containers/{item_id}", headers=self.headers)
             response.raise_for_status()
             print('success')
             return response.json()
@@ -18,7 +19,7 @@ class APIConnection:
 
     def create_item(self, data):
         try:
-            response = requests.post(f"{self.url}/item", json=data)
+            response = requests.post(f"{self.url}/containers", json=data, headers=self.headers)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as err:
@@ -26,7 +27,7 @@ class APIConnection:
 
     def update_item(self, item_id, data):
         try:
-            response = requests.put(f"{self.url}/item/{item_id}", json=data)
+            response = requests.put(f"{self.url}/containers/{item_id}", json=data, headers=self.headers)
             response.raise_for_status()
             print('success')
             return response.json()
