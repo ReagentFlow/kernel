@@ -1,6 +1,6 @@
 from datetime import datetime
 from time import sleep
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 from RPLCD.gpio import CharLCD
 
 from scanner import barcode_scanner
