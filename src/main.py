@@ -59,7 +59,7 @@ if __name__ == "__main__":
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
 
-    api_conn = APIConnection("http://0.0.0.0:8000/data", "device1")
+    api_conn = APIConnection("https://www.reagentflow.ru/api/data", "device1")
     display = Display()
 
     try:
