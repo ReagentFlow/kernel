@@ -10,7 +10,7 @@ class Display:
 
         # Настройка дисплея
         self.lcd = CharLCD(pin_rs=rs_pin, pin_rw=None, pin_e=e_pin, pins_data=data_pins,
-                           numbering_mode=GPIO.BCM, cols=cols, rows=rows, dotsize=8)
+                           numbering_mode=GPIO.BCM, cols=16, rows=2, dotsize=8)
 
     def display_message(self, message: str):
         self.lcd.clear()
