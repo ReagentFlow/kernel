@@ -1,15 +1,13 @@
-from datetime import datetime
 from time import sleep
 
 from scanner import barcode_scanner
 from scales import getting_weight
 from constants import KEY, COLLECTION
-from button import Button, PinOUT, PinIN
 from display.display_i2c import Display
 from connection.base import APIConnection
 
 
-def scanner_check() -> int:
+def scanner_check()  -> int:
     while True:
         key = barcode_scanner()
         try:
@@ -17,7 +15,7 @@ def scanner_check() -> int:
                 return key
             else:
                 display.clear()
-                display.display_message("try again")
+                display.display_message("TRY AGAIN")
                 print("Этого вещества нет в базе данных. Попробуйте еще раз.")
         except Exception as e:
             print(f"Ошибка при обращении к базе данных: {e}")
@@ -30,23 +28,28 @@ def scales_check() -> int:
         if weight > 0:
             return weight
         else:
-            display.display_message("try again")
+            display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
 
 
 def main() -> None:
+
     display.clear()
-    display.display_message("scan")
+    display.display_message("SCAN")
     print("Отсканируйте вещество.")
+
     key = scanner_check()
     display.display_message(str(key))
-    display.display_message("success")
-    sleep(4)
+    print(f"Штрих-код {key}")
+    sleep(2)
+
+    display.display_message("PUT ON THE SCALE")
     print("Сканирование успешно. Положите предмет на весы.")
-    display.display_message("Put on the scale")
+    sleep(2)
+
     weight = scales_check()
-    display.display_message(str(weight))
+    display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
 
     updated_data = {
@@ -54,14 +57,12 @@ def main() -> None:
         "mass": weight,
     }
 
-    sleep(5)
-
     try:
         response = api_conn.update_item(key, updated_data)
-        display.display_message("data updated")
+        display.display_message("DATA UPDATED")
         print("Данные успешно обновлены.")
     except Exception as e:
-        display.display_message("data error")
+        display.display_message("DATA ERROR")
         print(f"Ошибка при обновлении данных: {e}")
 
 
