@@ -1,4 +1,4 @@
-from time import sleep, time
+from time import sleep
 import threading
 
 from scanner import barcode_scanner
@@ -9,21 +9,24 @@ from connection.base import APIConnection
 
 
 class TimerThread(threading.Thread):
-    def __init__(self, duration=5, restart_callback=None):
+    def __init__(self, duration=7, restart_callback=None):
         super().__init__()
         self.duration = duration
         self.restart_callback = restart_callback
         self._stop_event = threading.Event()
+        self.is_running = True
 
     def run(self):
         sleep(self.duration)
         if not self._stop_event.is_set():
-            print("Таймер истек. Перезапуск функции main.")
+            print("Таймер истек. Перезапуск функции main...")
             if self.restart_callback:
                 self.restart_callback()
+        self.is_running = False
 
     def stop(self):
         self._stop_event.set()
+        self.is_running = False
 
 
 def scanner_check() -> int:
@@ -41,7 +44,7 @@ def scanner_check() -> int:
         sleep(1.5)
 
 
-def scales_check(restart_callback) -> int:
+def scales_check(restart_callback):
     timer = TimerThread(restart_callback=restart_callback)
     timer.start()
 
@@ -58,7 +61,6 @@ def scales_check(restart_callback) -> int:
 
 
 def main() -> None:
-
     display.clear()
     display.display_message("SCAN")
     print("Отсканируйте вещество.")
@@ -72,7 +74,9 @@ def main() -> None:
     print("Сканирование успешно. Положите предмет на весы.")
     sleep(2)
 
-    weight = scales_check(restart_callback=main)
+    weight = scales_check(restart_callback=main)  # Передаем main как колбэк
+    if weight is None:
+        return
 
     display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
@@ -92,7 +96,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
     api_conn = APIConnection("https://www.reagentflow.ru/api/data", "device1")
     display = Display()
 
@@ -103,5 +106,9 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Программа завершена пользователем.")
     finally:
+        # Завершите таймер, если он активен
+        if 'timer' in locals():
+            timer.stop()
+            timer.join()
         display.clear()
         display.close()
