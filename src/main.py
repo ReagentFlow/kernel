@@ -1,4 +1,4 @@
-from time import sleep
+from time import sleep, time
 
 from scanner import barcode_scanner
 from scales import getting_weight
@@ -7,7 +7,7 @@ from display.display_i2c import Display
 from connection.base import APIConnection
 
 
-def scanner_check()  -> int:
+def scanner_check() -> int:
     while True:
         key = barcode_scanner()
         try:
@@ -22,12 +22,15 @@ def scanner_check()  -> int:
         sleep(1.5)
 
 
-def scales_check() -> int:
+def scales_check():
+    start_time = time()
     while True:
         weight = getting_weight()
         if weight > 0:
             return weight
         else:
+            if time()-start_time > 10:
+                return None
             display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
@@ -49,6 +52,9 @@ def main() -> None:
     sleep(2)
 
     weight = scales_check()
+    if weight is None:
+        return
+
     display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
 
