@@ -1,5 +1,6 @@
 import requests
 
+
 class APIConnection:
     def __init__(self, API_url, device_token):
         self.url = API_url
@@ -7,7 +8,7 @@ class APIConnection:
 
     def get_item(self, item_id):
         try:
-            response = requests.get(f"{self.url}/containers/{item_id}", headers=self.headers)
+            response = requests.get(f"{self.url}/containers/{item_id}/", headers=self.headers)
             response.raise_for_status()
             print('success')
             return response.json()
@@ -27,7 +28,7 @@ class APIConnection:
 
     def update_item(self, item_id, data):
         try:
-            response = requests.put(f"{self.url}/containers/{item_id}", json=data, headers=self.headers)
+            response = requests.patch(f"{self.url}/containers/{item_id}/", json=data, headers=self.headers)
             response.raise_for_status()
             print('success')
             return response.json()

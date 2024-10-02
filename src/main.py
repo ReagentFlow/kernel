@@ -1,23 +1,21 @@
-from datetime import datetime
 from time import sleep
-import RPi.GPIO as GPIO
-from RPLCD.gpio import CharLCD
 
 from scanner import barcode_scanner
 from scales import getting_weight
 from constants import KEY, COLLECTION
-from button import Button, PinOUT, PinIN
-from display.display_melton import Display
+from display.display_i2c import Display
 from connection.base import APIConnection
 
 
-def scanner_check() -> int:
+def scanner_check()  -> int:
     while True:
         key = barcode_scanner()
         try:
             if api_conn.get_item(key):
                 return key
             else:
+                display.clear()
+                display.display_message("TRY AGAIN")
                 print("Этого вещества нет в базе данных. Попробуйте еще раз.")
         except Exception as e:
             print(f"Ошибка при обращении к базе данных: {e}")
@@ -30,17 +28,28 @@ def scales_check() -> int:
         if weight > 0:
             return weight
         else:
+            display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
 
 
 def main() -> None:
-    print("Отсканируйте вещество.")
-    key = scanner_check()
 
+    display.clear()
+    display.display_message("SCAN")
+    print("Отсканируйте вещество.")
+
+    key = scanner_check()
+    display.display_message(str(key))
+    print(f"Штрих-код {key}")
+    sleep(2)
+
+    display.display_message("PUT ON THE SCALE")
     print("Сканирование успешно. Положите предмет на весы.")
+    sleep(2)
 
     weight = scales_check()
+    display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
 
     updated_data = {
@@ -50,14 +59,14 @@ def main() -> None:
 
     try:
         response = api_conn.update_item(key, updated_data)
+        display.display_message("DATA UPDATED")
         print("Данные успешно обновлены.")
     except Exception as e:
+        display.display_message("DATA ERROR")
         print(f"Ошибка при обновлении данных: {e}")
 
 
 if __name__ == "__main__":
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
 
     api_conn = APIConnection("https://www.reagentflow.ru/api/data", "device1")
     display = Display()
@@ -65,8 +74,9 @@ if __name__ == "__main__":
     try:
         while True:
             main()
-            sleep(1)
+            sleep(3)
     except KeyboardInterrupt:
         print("Программа завершена пользователем.")
     finally:
-        GPIO.cleanup()
+        display.clear()
+        display.close()
