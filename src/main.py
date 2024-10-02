@@ -1,10 +1,29 @@
 from time import sleep, time
+import threading
 
 from scanner import barcode_scanner
 from scales import getting_weight
 from constants import KEY, COLLECTION
 from display.display_i2c import Display
 from connection.base import APIConnection
+
+
+class TimerThread(threading.Thread):
+    def __init__(self, duration=5, restart_callback=None):
+        super().__init__()
+        self.duration = duration
+        self.restart_callback = restart_callback
+        self._stop_event = threading.Event()
+
+    def run(self):
+        sleep(self.duration)
+        if not self._stop_event.is_set():
+            print("Таймер истек. Перезапуск функции main.")
+            if self.restart_callback:
+                self.restart_callback()
+
+    def stop(self):
+        self._stop_event.set()
 
 
 def scanner_check() -> int:
@@ -22,15 +41,17 @@ def scanner_check() -> int:
         sleep(1.5)
 
 
-def scales_check():
-    start_time = time()
+def scales_check(restart_callback) -> int:
+    timer = TimerThread(restart_callback=restart_callback)
+    timer.start()
+
     while True:
         weight = getting_weight()
         if weight > 0:
+            timer.stop()
+            timer.join()
             return weight
         else:
-            if time()-start_time > 10:
-                return None
             display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
@@ -51,9 +72,7 @@ def main() -> None:
     print("Сканирование успешно. Положите предмет на весы.")
     sleep(2)
 
-    weight = scales_check()
-    if weight is None:
-        return
+    weight = scales_check(restart_callback=main)
 
     display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
