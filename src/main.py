@@ -55,6 +55,8 @@ def scales_check(restart_callback):
             timer.join()
             return weight
         else:
+            timer.stop()
+            timer.join()
             display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
