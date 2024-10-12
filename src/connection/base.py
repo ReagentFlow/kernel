@@ -17,6 +17,8 @@ class APIConnection:
                 print('id error')
             else:
                 print(f"HTTP error occurred: {err}")
+        except Exception as err:
+            print(err)
 
     def create_item(self, data):
         try:
@@ -37,3 +39,5 @@ class APIConnection:
                 print('id error')
             else:
                 print(f"HTTP error occurred: {err}")
+        except Exception as err:
+            print(err)

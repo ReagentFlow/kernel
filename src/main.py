@@ -29,23 +29,18 @@ class TimerThread(threading.Thread):
         self.is_running = False
 
 
-def scanner_check() -> int:
+def scanner_check() -> int | None:
     while True:
         key = barcode_scanner()
-        try:
-            if api_conn.get_item(key):
-                return key
-            else:
-                display.clear()
-                display.display_message("TRY AGAIN")
-                print("Этого вещества нет в базе данных. Попробуйте еще раз.")
-        except Exception as e:
-            print(f"Ошибка при обращении к базе данных: {e}")
-        sleep(1.5)
+        if api_conn.get_item(key):
+            return key
+        else:
+            display.clear()
+            display.display_message("TRY AGAIN")
+            print("Этого вещества нет в базе данных. Попробуйте еще раз.")
 
 
-def scales_check(restart_callback):
-    timer = TimerThread(restart_callback=restart_callback)
+def scales_check(restart_callback, timer) -> int | None:
     timer.start()
 
     while True:
@@ -67,7 +62,9 @@ def main() -> None:
     display.display_message("SCAN")
     print("Отсканируйте вещество.")
 
-    key = scanner_check()
+    if not (key := scanner_check()):
+        return None
+
     display.display_message(str(key))
     print(f"Штрих-код {key}")
     sleep(2)
@@ -76,9 +73,10 @@ def main() -> None:
     print("Сканирование успешно. Положите предмет на весы.")
     sleep(2)
 
-    weight = scales_check(restart_callback=main)  # Передаем main как колбэк
+    timer = TimerThread(restart_callback=main)
+    weight = scales_check(restart_callback=main, timer=timer)  # Передаем main как колбэк
     if weight is None:
-        return
+        return None
 
     display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
@@ -109,7 +107,7 @@ if __name__ == "__main__":
         print("Программа завершена пользователем.")
     finally:
         # Завершите таймер, если он активен
-        if 'timer' in locals():
+        if 'timer' in locals() and timer.is_running:
             timer.stop()
             timer.join()
         display.clear()
