@@ -12,7 +12,34 @@ class Display:
 
     def display_message(self, message: str):
         self.lcd.clear()
-        self.lcd.write_string(message)
+
+        # Разбиваем сообщение на строки по 16 символов (cols = 16)
+        max_cols = 16
+        lines = []
+        for i in range(0, len(message), max_cols):
+            lines.append(message[i:i + max_cols])
+
+        # Выводим строки на дисплей
+        for i, line in enumerate(lines[:2]):  # Выводим только 2 строки (lcd на 2 строки)
+            self.lcd.cursor_pos = (i, 0)  # Устанавливаем позицию курсора
+            self.lcd.write_string(line)  # Печатаем строку как есть
+
+    def display_message_centered(self, message: str):
+        self.lcd.clear()
+
+        # Разбиваем сообщение на строки по 16 символов (cols = 16)
+        max_cols = 16
+        lines = []
+        for i in range(0, len(message), max_cols):
+            lines.append(message[i:i + max_cols])
+
+        # Центрирование каждой строки
+        for i, line in enumerate(lines[:2]):
+            line = line.strip()  # Убираем лишние пробелы по краям
+            padding = (max_cols - len(line)) // 2  # Вычисляем количество пробелов для центрирования
+            centered_line = ' ' * padding + line  # Добавляем нужное количество пробелов перед строкой
+            self.lcd.cursor_pos = (i, 0)  # Устанавливаем позицию курсора
+            self.lcd.write_string(centered_line)  # Печатаем строку по центру
 
     def clear(self):
         self.lcd.clear()

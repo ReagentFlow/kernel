@@ -34,7 +34,7 @@ def scanner_check() -> int | None:
         key = barcode_scanner()
         response = api_conn.get_item(key)
         if response:
-            formula = response.get("formula", "No formula")
+            formula = response.get("name", "No name")
             display.clear()
             display.display_message(formula)
             print(f"Формула вещества: {formula}")
@@ -106,6 +106,9 @@ def main() -> None:
 if __name__ == "__main__":
     api_conn = APIConnection("https://www.reagentflow.ru/api/data", "device1")
     display = Display()
+    display.clear()
+    display.display_message_centered("REAGENT FLOW")
+    sleep(2)
 
     try:
         while True:
