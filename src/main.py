@@ -32,7 +32,12 @@ class TimerThread(threading.Thread):
 def scanner_check() -> int | None:
     while True:
         key = barcode_scanner()
-        if api_conn.get_item(key):
+        response = api_conn.get_item(key)
+        if response:
+            formula = response.get("formula", "No formula")
+            display.clear()
+            display.display_message(formula)
+            print(f"Формула вещества: {formula}")
             return key
         else:
             display.clear()
@@ -52,6 +57,7 @@ def scales_check(restart_callback, timer) -> int | None:
         else:
             timer.stop()
             timer.join()
+            display.clear()
             display.display_message("TRY AGAIN")
             print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
         sleep(1.5)
@@ -64,22 +70,21 @@ def main() -> None:
 
     if not (key := scanner_check()):
         return None
-
-    display.display_message(str(key))
-    print(f"Штрих-код {key}")
     sleep(2)
 
+    display.clear()
     display.display_message("PUT ON THE SCALE")
     print("Сканирование успешно. Положите предмет на весы.")
-    sleep(2)
 
     timer = TimerThread(restart_callback=main)
     weight = scales_check(restart_callback=main, timer=timer)  # Передаем main как колбэк
     if weight is None:
         return None
 
+    display.clear()
     display.display_message(f"{weight} grams")
     print(f"Вес: {weight} г")
+    sleep(2)
 
     updated_data = {
         "container_id": key,
@@ -88,9 +93,12 @@ def main() -> None:
 
     try:
         response = api_conn.update_item(key, updated_data)
+        display.clear()
         display.display_message("DATA UPDATED")
         print("Данные успешно обновлены.")
+        sleep(2)
     except Exception as e:
+        display.clear()
         display.display_message("DATA ERROR")
         print(f"Ошибка при обновлении данных: {e}")
 
@@ -102,7 +110,8 @@ if __name__ == "__main__":
     try:
         while True:
             main()
-            sleep(3)
+            display.clear()
+            sleep(1.5)
     except KeyboardInterrupt:
         print("Программа завершена пользователем.")
     finally:
