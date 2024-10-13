@@ -1,7 +1,7 @@
-SCALES_PORT = '/dev/ttyACM0'
+SCALES_PORT = '/dev/ttyACM1'
 KEY = 'private.json'
 COLLECTION = 'containers'
-SCANNER_PORT = '/dev/ttyACM1'
+SCANNER_PORT = '/dev/ttyACM0'
 
 # macbook pro egor scanner port /dev/tty.usbmodemS_N_G21AD97581
 # run port.py to find port for SCALES and SCANNER

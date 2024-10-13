@@ -34,7 +34,7 @@ def scanner_check() -> int | None:
         key = barcode_scanner()
         response = api_conn.get_item(key)
         if response:
-            formula = response.get("name", "No name")
+            formula = response.get("formula", "No formula")
             display.clear()
             display.display_message(formula)
             print(f"Формула вещества: {formula}")
@@ -49,18 +49,22 @@ def scales_check(restart_callback, timer) -> int | None:
     timer.start()
 
     while True:
-        weight = getting_weight()
-        if weight > 0:
-            timer.stop()
-            timer.join()
-            return weight
-        else:
-            timer.stop()
-            timer.join()
+        try:
+            weight = getting_weight()
+            if weight > 0:
+                timer.stop()
+                timer.join()
+                return weight
+            else:
+                timer.stop()
+                timer.join()
+                display.clear()
+                display.display_message("TRY TO PUT ON THE SCALES AGAIN")
+                print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
+            sleep(1.5)
+        except Exception:
             display.clear()
-            display.display_message("TRY AGAIN")
-            print("Пожалуйста, положите предмет на весы и попробуйте еще раз.")
-        sleep(1.5)
+            display.display_message("TRY TO PUT ON THE SCALES AGAIN")
 
 
 def main() -> None:
@@ -73,7 +77,7 @@ def main() -> None:
     sleep(2)
 
     display.clear()
-    display.display_message("PUT ON THE SCALE")
+    display.display_message("PUT ON THE SCALES")
     print("Сканирование успешно. Положите предмет на весы.")
 
     timer = TimerThread(restart_callback=main)

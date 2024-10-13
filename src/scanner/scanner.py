@@ -12,7 +12,7 @@ def barcode_scanner() -> Union[int, None]:
     decoded = s.decode('utf-8').strip('\r')
 
     try:
-        return int(decoded)
+        return int(decoded)//10
     except ValueError:
         return None
 
